@@ -1,6 +1,6 @@
 // ignore_for_file: non_constant_identifier_names, lines_longer_than_80_chars
 
-library prisma.namespace.prisma; // ignore_for_file: no_leading_underscores_for_library_prefixes
+// ignore_for_file: no_leading_underscores_for_library_prefixes
 
 import 'package:orm/orm.dart' as _i1;
 

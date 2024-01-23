@@ -49,9 +49,24 @@ Future<Response> _deleteUser(int id, RequestContext context) async {
 }
 
 Future<Response> _updateUser(int id, RequestContext context) async {
-  return Response.json(
-    body: {
-      'menssage': 'user with id = $id is update',
-    },
-  );
+  final repo = context.read<UserRepository>();
+  final json = (await context.request.body()) as Map<String, dynamic>;
+  final data = await repo.updateUserById(id: id, us: json);
+
+  if (data != null) {
+    return Response.json(
+      body: {
+        'menssage': 'user with id = $id is update',
+        'user': data,
+      },
+      statusCode: HttpStatus.accepted,
+    );
+  } else {
+    return Response.json(
+      body: {
+        'menssage': 'not existe user with id $id',
+      },
+      statusCode: HttpStatus.badRequest,
+    );
+  }
 }

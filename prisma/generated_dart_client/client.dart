@@ -1,6 +1,6 @@
 // ignore_for_file: strict_raw_type, lines_longer_than_80_chars, inference_failure_on_collection_literal
 
-library prisma.client; // ignore_for_file: no_leading_underscores_for_library_prefixes
+// ignore_for_file: no_leading_underscores_for_library_prefixes
 
 import 'package:orm/dmmf.dart' as _i5;
 import 'package:orm/engines/binary.dart' as _i4;

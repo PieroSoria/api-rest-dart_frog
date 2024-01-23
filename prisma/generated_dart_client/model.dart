@@ -1,4 +1,3 @@
-library prisma.namespace.model;
 
 class User {
   const User({
