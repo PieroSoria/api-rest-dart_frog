@@ -16,7 +16,6 @@ Future<Response> _getSingleUser(int id, RequestContext context) async {
   final repo = context.read<UserRepository>();
   final jsondata = (await repo.getSingleUser(id: id))?.toJson();
   if (jsondata != null) {
-    // final json = jsondata.toJson();
     return Response.json(
       body: {
         'menssaje': 'user is id = $id',
@@ -50,8 +49,9 @@ Future<Response> _deleteUser(int id, RequestContext context) async {
 
 Future<Response> _updateUser(int id, RequestContext context) async {
   final repo = context.read<UserRepository>();
-  final json = (await context.request.body()) as Map<String, dynamic>;
-  final data = await repo.updateUserById(id: id, us: json);
+  
+
+  final data = await repo.updateUserById(id: id, context: context);
 
   if (data != null) {
     return Response.json(

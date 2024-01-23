@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
+import 'package:dart_frog/dart_frog.dart';
 import 'package:orm/orm.dart';
 
 import 'client.dart';
@@ -56,33 +57,43 @@ class UserRepository {
 
   Future<User?> updateUserById({
     required int id,
-    required Map<dynamic, dynamic> us,
+    required RequestContext context,
   }) async {
-    final existingUser =
-        await _db.user.findUnique(where: UserWhereUniqueInput(id: id));
-    if (existingUser == null) {
-      return null;
-    }
-    final passcrip = sha256.convert(utf8.encode(us['password'] as String));
-    final user = await _db.user.update(
-      data: PrismaUnion.$2(
-        UserUncheckedUpdateInput(
-          name: PrismaUnion.$1(
-            us['name'] as String,
-          ),
-          lastname: PrismaUnion.$1(
-            us['lastname'] as String,
-          ),
-          username: PrismaUnion.$1(
-            us['username'] as String,
-          ),
-          password: PrismaUnion.$1(
-            passcrip.toString(),
+    try {
+      final existingUser =
+          await _db.user.findUnique(where: UserWhereUniqueInput(id: id));
+
+      if (existingUser == null) {
+        return null;
+      }
+      final json = (await context.request.json()) as Map<String, dynamic>;
+      final name = json['name'] as String?;
+      final lastname = json['lastname'] as String?;
+      final username = json['username'] as String?;
+      final password = json['password'] as String?;
+
+      if (name == null &&
+          lastname == null &&
+          username == null &&
+          password == null) {
+        return existingUser;
+      }
+
+      final passcrip = sha256.convert(utf8.encode(password!));
+      final user = await _db.user.update(
+        data: PrismaUnion.$2(
+          UserUncheckedUpdateInput(
+            name: PrismaUnion.$1(name!),
+            lastname: PrismaUnion.$1(lastname!),
+            username: PrismaUnion.$1(username!),
+            password: PrismaUnion.$1(passcrip.toString()),
           ),
         ),
-      ),
-      where: UserWhereUniqueInput(id: id),
-    );
-    return user;
+        where: UserWhereUniqueInput(id: id),
+      );
+      return user;
+    } catch (e) {
+      return null;
+    }
   }
 }
