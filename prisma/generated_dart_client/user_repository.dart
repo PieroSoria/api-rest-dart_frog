@@ -14,20 +14,41 @@ class UserRepository {
   UserRepository(this._db);
   final PrismaClient _db;
 
+  String _hashpassword(String pass) {
+    final encodedpassword = utf8.encode(pass);
+    return sha256.convert(encodedpassword).toString();
+  }
+
+  Future<User?> authUser({
+    required String username,
+    required String password,
+  }) async {
+    final user = await _db.user.findFirst(
+      where: UserWhereInput(
+        username: PrismaUnion.$1(
+          StringFilter(equals: username),
+        ),
+        password: PrismaUnion.$1(
+          StringFilter(equals: _hashpassword(password)),
+        ),
+      ),
+    );
+    return user;
+  }
+
   Future<User?> createUser({
     required String name,
     required String lastname,
     required String username,
     required String password,
   }) async {
-    final passcrip = sha256.convert(utf8.encode(password));
     final user = await _db.user.create(
       data: PrismaUnion.$1(
         UserCreateInput(
           name: name,
           lastname: lastname,
           username: username,
-          password: passcrip.toString(),
+          password: _hashpassword(password),
         ),
       ),
     );
