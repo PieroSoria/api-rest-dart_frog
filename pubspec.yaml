@@ -10,7 +10,10 @@ dependencies:
   crypto: ^3.0.3
   dart_frog: ^1.0.0
   dart_frog_web_socket: ^1.0.0
+  firebase_dart: ^1.1.2
+  http: ^1.2.0
   orm: ^4.0.0-beta
+  path: ^1.9.0
 
 dev_dependencies:
   mocktail: ^1.0.0

@@ -7,15 +7,6 @@ import '../prisma/generated_dart_client/user_repository.dart';
 
 final _client =
     PrismaClient(datasourceUrl: Platform.environment['DATABASE_URL']);
-// FutureOr<T> providePrisma<T>(
-//   FutureOr<T> Function(PrismaClient prisma) main,
-// ) async {
-//   try {
-//     return await main(_client);
-//   } finally {
-//     await _client.$disconnect();
-//   }
-// }
 
 Handler middleware(Handler handler) {
   return handler.use(requestLogger()).use(providerUserRepo());
